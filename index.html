@@ -1,0 +1,471 @@
+
+<!-- saved from url=(0060)https://flaxbeard.github.io/tno-draw-io-converter/index.html -->
+
+<!-- Credit to Flaxbeard for original code. -wheel of heaven fixed 5/20/2024 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="preconnect" href="https://fonts.googleapis.com/">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+        <link href="./index_files/css2" rel="stylesheet">
+        <style>
+            @font-face {
+                font-family: 'AFL-Font-pespaye-nonmetric';
+                src:  url('AFL-Font-pespaye-nonmetric.ttf.woff') format('woff'),
+                url('AFL-Font-pespaye-nonmetric.ttf.svg#AFL-Font-pespaye-nonmetric') format('svg'),
+                url('AFL-Font-pespaye-nonmetric.ttf.eot'),
+                url('AFL-Font-pespaye-nonmetric.eot?#iefix') format('embedded-opentype'); 
+                font-weight: normal;
+                font-style: normal;
+            }
+            html, body {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: 100%;
+            }
+            .page {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: row;
+                gap: 40px;
+                width: 100%;
+                height: 100%;
+                background-color: #061017;
+                padding: 40px;
+                box-sizing: border-box;
+
+                
+                color: #B2C9C2;
+                font-family: 'Aldrich', sans-serif;
+                font-size: 16px;
+            }
+            .subpage {
+                flex: 1;
+                border: 2px dashed #59C7C2;
+                padding: 15px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .sidepage {
+                display: flex;
+                align-items: stretch;
+                justify-content: stretch;
+                flex-direction: column;
+                gap: 40px;
+                height: 100%;
+                flex: 1;
+            }
+            .slider {
+                display: flex;
+                align-items: flex-start;
+                gap: 40px;
+                width: 700px;
+                height: 40px;
+            }
+            textarea {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                background: none;
+                border: none;
+                outline: none;
+                resize: none;
+                overflow-y: auto;
+
+                
+                color: #B2C9C2;
+                font-family: 'Aldrich', sans-serif;
+                font-size: 12px;
+            }
+
+            h1 {
+                text-align: center;;
+            }
+
+          
+
+            .userInput {
+                height: 300px;
+            }
+
+            .output {
+                flex: 1;
+                cursor: pointer;
+            }
+
+            .button {
+                border: 2px dashed #D27677;
+                padding: 10px;
+                cursor: pointer;
+                color: #D27677;
+                display: relative;
+                text-align: center;
+                width: 150px;
+                height: 20px;
+                line-height: 20px;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+            .button:active {
+                opacity: 0.8;
+            }
+
+            input[type=range] {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 300px;
+                background: transparent;
+            }
+
+
+            input[type=range]:focus {
+                outline: none; 
+            }
+
+            input[type=range]::-ms-track {
+                width: 100%;
+                cursor: pointer;
+
+                /* Hides the slider so custom styles can be added */
+                background: transparent; 
+                border-color: transparent;
+                color: transparent;
+            }
+
+            input[type=range]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                height: 20px;
+                width: 20px;
+                border-radius: 10px;
+                background: #D27677;
+                border: 2px solid #061017;
+                cursor: pointer;
+                margin-top: -7px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+            }
+
+            input[type=range]::-webkit-slider-runnable-track {
+                height: 6px;
+                cursor: pointer;
+                border-radius: 3px;
+                background: #D27677;
+            }
+
+            .previewOuter {
+                overflow: scroll;
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+
+            #preview {
+
+                transform: scale(0.25);
+            }
+
+            #preview svg {
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+
+        </style>
+    <style type="text/css" id="operaUserStyle"></style><style type="text/css"></style></head>
+    <body>
+        <div class="page">
+            <div class="sidepage">
+                <div class="subpage">
+                    <h1>Input draw.io Output Below</h1> 
+                    Copy from Extras -&gt; Edit Diagram
+                    <textarea class="userInput" id="userInput"></textarea>
+                    <div class="slider">
+                        <input type="range" min="25" max="300" value="70" step="0.25" class="slider" id="horizSpacing">
+                        <span>Horizontal spacing: <span id="horizSpacingLabel">70</span></span>
+                    </div>
+                    <div class="slider">
+                        <input type="range" min="25" max="300" value="80" step="0.25" class="slider" id="vertSpacing">
+                        <span>Vertical spacing: <span id="vertSpacingLabel">80</span></span>
+                    </div>
+                    <div class="slider">
+                        <span>Tag:</span>
+
+                        <input type="text" value="BRA" id="tag">
+                    </div>
+                </div>
+                <div class="subpage">
+                    <div class="previewOuter">
+                        <div id="preview">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidepage">
+                <div class="subpage">
+                    <h1>Focus Output</h1>
+                    <div class="button" id="focOutCopy">Click to copy</div>
+                    <textarea class="output" id="focOut"></textarea>
+                </div>
+                <div class="subpage">
+                    <h1>Loc Output</h1>
+                    <div class="button" id="locOutCopy">Click to copy</div>
+                    <textarea class="output" id="locOut"></textarea>
+                </div>
+            </div>
+        </div>
+        <script>
+            function decodeHTMLEntities(text) {
+                var textArea = document.createElement('textarea');
+                textArea.innerHTML = text;
+                return textArea.value;
+            }
+
+            const BOX_REGEX = /(<mxCell.*value((?!strokeColor=none).)*?>[\s\S]*?<\/mxCell>)/mg;
+
+            const ARROW_REGEX = /(<mxCell.*source.*target.*>)/g;
+
+            const SOURCE_REGEX = /source="([^"]*)"/g;
+            const TARGET_REGEX = /target="([^"]*)"/g;
+            
+            const VALUE_REGEX = /value="([^"]*)"/g;
+            const ID_REGEX = /id="([^"]*)"/g;
+            const X_REGEX = / x="([^"]*)"/g;
+            const Y_REGEX = / y="([^"]*)"/g;
+
+            const TAG_REGEX = /<.*?>/g;
+            const SPACE_REGEX = /\s+/g;
+
+            const NON_ALPHANUMERIC_REGEX = /[^a-zA-Z0-9_]+/g;
+
+
+            const BASE_FOCUS = `
+shared_focus = {
+	id = <tag>
+	icon = GFX_<tag>
+	cost = 2
+	x = <x>
+	y = <y>
+	completion_reward = {
+		log = "[GetDateText]: [Root.GetName]: Focus <tag>"
+	}
+<prereqs><exclusives>}
+`
+
+            function generateFocusCode(text, horizSpacingValue, vertSpacingValue, tag) {
+                const foci = {};
+
+                for (const box of text.matchAll(BOX_REGEX)) {
+                    const focusId = box[0].matchAll(ID_REGEX).next().value[1];
+
+                    let text = box[0].matchAll(VALUE_REGEX).next().value[1];
+                    text = decodeHTMLEntities(text).replaceAll("&nbsp;", " ");
+                    text = text.replaceAll(TAG_REGEX, " ");
+                    text = text.replaceAll(SPACE_REGEX, " ");
+                    text = text.trim();
+
+                    if (!text || !box) {
+                        continue;
+                    }
+
+                    const xs = box[0].matchAll(X_REGEX).next().value;
+                    const ys = box[0].matchAll(Y_REGEX).next().value;
+
+                    const focusX = xs ? xs[1] : 0;
+                    const focusY = ys ? ys[1] : 0;
+
+                    const focusName = text;
+                    let focusTag = text.replaceAll(" ", "_").toLowerCase().replaceAll(NON_ALPHANUMERIC_REGEX, "");
+                    focusTag = `${tag}_${focusTag}`
+
+                    foci[focusId] = {
+                        "id": focusId,
+                        "tag": focusTag,
+                        "name": focusName,
+                        "rawX": parseFloat(focusX),
+                        "rawY": parseFloat(focusY),
+                        "relative": false,
+                        "exclusives": [],
+                        "dashedPrereqs": [],
+                        "prereqs": []
+                    }
+                }
+
+                for (const box of text.matchAll(ARROW_REGEX)) {
+                    const source = box[0].matchAll(SOURCE_REGEX).next().value[1];
+                    const target = box[0].matchAll(TARGET_REGEX).next().value[1];
+
+                    if (!(source in foci) || !(target in foci)) {
+                        continue;
+                    }
+                    const sFocus = foci[source];
+                    const tFocus = foci[target];
+
+
+                    if (Math.abs(sFocus.rawY - tFocus.rawY) < 10 && !sFocus.exclusives.includes(target)) {
+                        sFocus.exclusives.push(target);
+                        tFocus.exclusives.push(source);
+                    } else {
+                        if (box[0].includes("dash")) {
+                            tFocus.dashedPrereqs.push(source);
+                        } else {
+                            tFocus.prereqs.push(source);
+                        }
+                    }
+                }
+
+                let baseX = Number.MAX_VALUE;
+                let baseY = Number.MAX_VALUE;
+                let maxX = 0;
+                let maxY = 0;
+                for (const focusId of Object.keys(foci)) {
+                    focus = foci[focusId]
+                    if (focus.rawX < baseX) {
+                        baseX = focus.rawX;
+                    }
+                    if (focus.rawY < baseY) {
+                        baseY = focus.rawY;
+                    }
+
+                    if (focus.rawX > maxX) {
+                        maxX = focus.rawX;
+                    }
+                    if (focus.rawY > maxY) {
+                        maxY = focus.rawY;
+                    }
+                }
+
+                
+                for (const focusId of Object.keys(foci)) {
+                    foci[focusId].x = Math.round((foci[focusId].rawX - baseX) / horizSpacingValue);
+                    foci[focusId].y = Math.round((foci[focusId].rawY - baseY) / vertSpacingValue);
+                }
+
+                for (const focusId of Object.keys(foci)) {
+                    const focus = foci[focusId];
+
+			        const allPrereqs = focus.prereqs.concat(focus.dashedPrereqs);
+                    if (allPrereqs.length > 0) {
+                        focus.relative = allPrereqs[0]
+                        focus.relX = Math.round((focus.rawX - foci[focus.relative].rawX) / horizSpacingValue)
+                        focus.relY = Math.round((focus.rawY - foci[focus.relative].rawY) / vertSpacingValue)
+                    }
+                }
+
+                let out = "";
+
+                for (const focusId of Object.keys(foci)) {
+                    const focus = foci[focusId];
+
+                    // Assemble prerequisite code
+                    let prereqsCode = '';
+                    for (const prereq of focus.prereqs) {
+                        prereqsCode += `\tprerequisite = { focus = ${foci[prereq].tag} }\n`;
+                    }
+                    if (focus.dashedPrereqs.length > 0) {
+                        prereqsCode += `\tprerequisite = { \n`;
+                        for (const prereq of focus.dashedPrereqs) {
+                            prereqsCode += `\t\tfocus = ${foci[prereq].tag}\n`;
+                            prereqsCode += `\t\t}\n`;
+                        }
+                        prereqsCode += `\t}\n`;
+                    }
+
+                    // Assemble mutually exclusive code
+                    let exclusivesCode = '';
+                    for (const exclusive of focus.exclusives) {
+                        exclusivesCode += `\tmutually_exclusive = { focus = ${foci[exclusive].tag} }\n`;
+                    }
+
+                    let focusCode = BASE_FOCUS.replaceAll("<tag>", focus.tag);
+
+                    // Assemble positioning code
+                    if (focus.relative) {
+                        prereqsCode = `\trelative_position_id = ${foci[focus.relative].tag}\n` + prereqsCode;
+                        focusCode = focusCode.replaceAll("<x>", focus.relX).replaceAll("<y>", focus.relY);
+                    }
+                    else {
+                        focusCode = focusCode.replaceAll("<x>", focus.x).replaceAll("<y>", focus.y);
+                    }
+
+                    focusCode = focusCode.replaceAll("<prereqs>", prereqsCode).replaceAll("<exclusives>", exclusivesCode);
+                    out += focusCode;
+                }
+
+                let outLoc = "l_english:\n";
+                for (const focusId of Object.keys(foci)) {
+                    const focus = foci[focusId];
+                    outLoc += ` ${focus.tag}: "${focus.name}"\n`;
+                    outLoc += ` ${focus.tag}_desc: "${focus.name}"\n`;
+                }
+
+                
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.setAttribute("width", (((maxX - baseX) / horizSpacingValue) + 1) * 96 + 158);
+                svg.setAttribute("height", (((maxY - baseY) / vertSpacingValue) + 1) * 130 + 44);
+
+                
+                for (const focusId of Object.keys(foci)) {
+                    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    rect.setAttribute("width", "158px");
+                    rect.setAttribute("height", "44px");
+                    rect.setAttribute("stroke", "#E08282");
+                    rect.setAttribute("stroke-width", "2px");
+                    rect.setAttribute("fill", "none");
+                    rect.setAttribute("x", (foci[focusId].x) * 96 + 1);
+                    rect.setAttribute("y", (foci[focusId].y) * 130 + 1);
+
+
+                    svg.appendChild(rect);
+                }
+
+                return [out, outLoc, svg];
+            }
+
+            const input = document.getElementById('userInput');
+            const focusTextarea = document.getElementById('focOut');
+            const locTextarea = document.getElementById('locOut');
+            const focusCopy = document.getElementById('focOutCopy');
+            const locCopy = document.getElementById('locOutCopy');
+
+
+            const horizSpacing = document.getElementById('horizSpacing');
+            const horizSpacingLabel = document.getElementById('horizSpacingLabel');
+            const vertSpacing = document.getElementById('vertSpacing');
+            const vertSpacingLabel = document.getElementById('vertSpacingLabel');
+            const tagInput = document.getElementById('tag');
+            const preview = document.getElementById('preview');
+
+            function regenerateFocuses() {
+                horizSpacingLabel.innerHTML = horizSpacing.value;
+                vertSpacingLabel.innerHTML = vertSpacing.value;
+                const [focusCode, locOut, svg] = generateFocusCode(input.value, horizSpacing.value, vertSpacing.value, tagInput.value);
+                focusTextarea.value = focusCode;
+                locTextarea.value = locOut;
+                preview.replaceChildren(svg);
+            }
+
+            input.addEventListener("input", regenerateFocuses, false);
+            horizSpacing.addEventListener("input", regenerateFocuses, false);
+            vertSpacing.addEventListener("input", regenerateFocuses, false);
+            tagInput.addEventListener("input", regenerateFocuses, false);
+
+            focusCopy.addEventListener("click", function(e) {
+                focusTextarea.select();
+                document.execCommand("copy");
+                console.log("Copied focus code to clipboard");
+            }, false);
+
+            locCopy.addEventListener("click", function(e) {
+                locTextarea.select();
+                document.execCommand("copy");
+            }, false);
+
+            horizSpacing.addEventListener("input", function(e) {
+                var val = e.target.value;
+            }, false);
+        </script>
+    
+</body></html>
